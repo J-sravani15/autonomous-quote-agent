@@ -60,7 +60,7 @@ async function processQuote() {
 
   try {
 
-    const response = await fetch("https://autonomous-qoute-agent.onrender.com/predict", {
+    const response = await fetch("https://autonomous-quote-agent.onrender.com/predict", {
         method: "POST",
 
         headers: {
