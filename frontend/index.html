@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Autonomous Quote Agent</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-slate-900 text-white min-h-screen">
+
+<div class="max-w-7xl mx-auto p-6">
+
+    <h1 class="text-4xl font-bold text-center text-blue-400 mb-8">
+        Autonomous Quote Agent Intelligence Platform
+    </h1>
+
+   <!-- INPUT CARDS -->
+
+<div class="grid grid-cols-1 gap-6 mb-6">
+
+    <!-- DRIVER INFORMATION -->
+
+    <div class="bg-slate-800 rounded-xl p-6">
+
+        <h2 class="text-2xl font-bold text-blue-400 mb-4">
+            Driver Information
+        </h2>
+
+        <div class="grid md:grid-cols-4 gap-4">
+
+          <input type="number"
+       min="18"
+       max="100"
+       id="Driver_Age"
+       placeholder="Driver Age"
+       class="p-3 rounded bg-slate-700">
+
+<input type="number"
+       min="0"
+       max="80"
+       id="Driving_Exp"
+       placeholder="Driving Experience"
+       class="p-3 rounded bg-slate-700">
+
+<input type="number"
+       min="0"
+       id="Prev_Accidents"
+       placeholder="Previous Accidents"
+       class="p-3 rounded bg-slate-700">
+
+<input type="number"
+       min="0"
+       id="Prev_Citations"
+       placeholder="Traffic Violations Count"
+       class="p-3 rounded bg-slate-700">
+
+        </div>
+
+    </div>
+
+    <!-- VEHICLE INFORMATION -->
+
+    <div class="bg-slate-800 rounded-xl p-6">
+
+    <h2 class="text-2xl font-bold text-green-400 mb-4">
+        Vehicle Information
+    </h2>
+
+    <div class="grid md:grid-cols-4 gap-4">
+
+        <select
+            id="Veh_Usage"
+            class="p-3 rounded bg-slate-700">
+
+            <option value="">Vehicle Usage</option>
+            <option value="1">Personal</option>
+            <option value="2">Business</option>
+            <option value="3">Commercial</option>
+
+        </select>
+
+        <select
+            id="Coverage"
+            class="p-3 rounded bg-slate-700">
+
+            <option value="">Coverage Level</option>
+            <option value="1">Basic</option>
+            <option value="2">Standard</option>
+            <option value="3">Premium</option>
+
+        </select>
+
+        <input
+            type="number"
+            min="0"
+            id="Annual_Miles_Range"
+            placeholder="Annual Miles"
+            class="p-3 rounded bg-slate-700">
+
+        <select
+            id="Vehicle_Cost_Range"
+            class="p-3 rounded bg-slate-700">
+
+            <option value="">Vehicle Cost Range</option>
+            <option value="1">Below ₹5 Lakh</option>
+            <option value="2">₹5 - ₹10 Lakh</option>
+            <option value="3">₹10 - ₹20 Lakh</option>
+            <option value="4">Above ₹20 Lakh</option>
+
+        </select>
+
+    </div>
+
+</div>
+
+    <!-- FINANCIAL INFORMATION -->
+
+    <div class="bg-slate-800 rounded-xl p-6">
+
+    <h2 class="text-2xl font-bold text-yellow-400 mb-4">
+        Financial Information
+    </h2>
+
+    <div class="grid md:grid-cols-2 gap-4">
+
+        <select
+            id="Sal_Range"
+            class="p-3 rounded bg-slate-700">
+
+            <option value="">Salary Range</option>
+            <option value="1">Below ₹3 Lakh</option>
+            <option value="2">₹3 - ₹6 Lakh</option>
+            <option value="3">₹6 - ₹12 Lakh</option>
+            <option value="4">Above ₹12 Lakh</option>
+
+        </select>
+
+        <input
+            type="number"
+            min="0"
+            id="Quoted_Premium"
+            placeholder="Current Insurance Premium (₹/year)"
+            class="p-3 rounded bg-slate-700">
+
+    </div>
+
+</div>
+
+
+    <!-- QUOTE ANALYSIS -->
+
+    <div class="bg-slate-800 rounded-xl p-6">
+
+        <h2 class="text-2xl font-bold text-purple-400 mb-4">
+            Quote Analysis
+        </h2>
+
+        <p class="text-gray-400 mb-4">
+            Click the button below to run the autonomous agent pipeline.
+        </p>
+
+        <button
+            onclick="processQuote()"
+            class="w-full bg-blue-500 hover:bg-blue-600 p-4 rounded-lg font-bold text-lg">
+
+            Analyze Quote
+
+        </button>
+
+    </div>
+
+</div>
+
+    <!-- AGENT PIPELINE -->
+
+    <div class="bg-slate-800 rounded-xl p-6 mb-6">
+
+        <h2 class="text-2xl font-bold mb-4">
+            Agent Pipeline
+        </h2>
+
+        <div id="agent1" class="bg-slate-700 p-3 rounded mb-2">
+            Risk Profiler : Waiting
+        </div>
+
+        <div id="agent2" class="bg-slate-700 p-3 rounded mb-2">
+            Conversion Predictor : Waiting
+        </div>
+
+        <div id="agent3" class="bg-slate-700 p-3 rounded mb-2">
+            Premium Advisor : Waiting
+        </div>
+
+        <div id="agent4" class="bg-slate-700 p-3 rounded">
+            Decision Router : Waiting
+        </div>
+
+    </div>
+    <!-- LOADING ANIMATION -->
+
+<div
+    id="loader"
+    class="hidden bg-slate-800 rounded-xl p-6 mb-6 text-center">
+
+    <div
+        class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500 mx-auto mb-4">
+    </div>
+
+    <h2 class="text-xl font-bold text-blue-400">
+        AI Agents Processing Quote...
+    </h2>
+
+    <p class="text-gray-400 mt-2">
+        Risk Analysis • Conversion Prediction • Premium Optimization
+    </p>
+
+</div>
+
+    <!-- RESULT CARDS -->
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+
+        <div class="bg-slate-800 p-5 rounded-xl">
+            <h3 class="text-gray-400">Risk Level</h3>
+            <p id="risk" class="text-2xl font-bold mt-2">-</p>
+        </div>
+
+        <div class="bg-slate-800 p-5 rounded-xl">
+            <h3 class="text-gray-400">Conversion Probability</h3>
+            <p id="probability" class="text-2xl font-bold mt-2">-</p>
+        </div>
+
+        <div class="bg-slate-800 p-5 rounded-xl">
+            <h3 class="text-gray-400">Recommended Premium</h3>
+            <p id="premium" class="text-2xl font-bold mt-2">-</p>
+        </div>
+
+        <div class="bg-slate-800 p-5 rounded-xl">
+            <h3 class="text-gray-400">Decision</h3>
+            <p id="decision" class="text-2xl font-bold mt-2">-</p>
+        </div>
+
+    </div>
+
+    <!-- QUOTE HISTORY -->
+
+    <div class="bg-slate-800 rounded-xl p-6 mt-6">
+
+        <h2 class="text-2xl font-bold mb-4">
+            Quote History
+        </h2>
+
+        <table class="w-full text-left">
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Risk</th>
+                    <th>Probability</th>
+                    <th>Decision</th>
+                </tr>
+            </thead>
+
+            <tbody id="historyTable">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
