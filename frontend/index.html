@@ -12,21 +12,64 @@
 
 <body class="bg-slate-900 text-white min-h-screen">
 
-<div class="max-w-7xl mx-auto p-6">
 
-    <h1 class="text-4xl font-bold text-center text-blue-400 mb-8">
-        Autonomous Quote Agent Intelligence Platform
-    </h1>
+<div class="max-w-7xl mx-auto p-6">
+    <!-- HEADER -->
+
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+
+    <div>
+        <h1
+            class="text-5xl font-bold text-blue-400 mb-3"
+            data-i18n="appTitle">
+
+            Autonomous Quote Agent
+
+        </h1>
+
+        <p
+            class="text-gray-400 text-lg"
+            data-i18n="subtitle">
+
+            AI-powered underwriting, conversion prediction and local Ollama explanations.
+
+        </p>
+    </div>
+
+    <div class="bg-slate-800 p-4 rounded-xl mt-4 md:mt-0">
+
+        <label
+            class="block text-gray-300 mb-2"
+            data-i18n="language">
+
+            Language
+
+        </label>
+
+        <select
+            id="lang"
+            onchange="changeLanguage(this.value)"
+            class="bg-slate-700 text-white px-4 py-3 rounded-lg border border-slate-600">
+
+            <option value="en">🇬🇧 English</option>
+            <option value="te">🇮🇳 తెలుగు</option>
+            <option value="hi">🇮🇳 हिन्दी</option>
+            <option value="ta">🇮🇳 தமிழ்</option>
+
+        </select>
+
+    </div>
+
+</div>
 
    <!-- INPUT CARDS -->
 
 <div class="grid grid-cols-1 gap-6 mb-6">
 
-    <!-- DRIVER INFORMATION -->
 
     <div class="bg-slate-800 rounded-xl p-6">
 
-        <h2 class="text-2xl font-bold text-blue-400 mb-4">
+        <h2 class="text-2xl font-bold text-blue-400 mb-4" data-i18n="driverInformation">
             Driver Information
         </h2>
 
@@ -36,6 +79,7 @@
        min="18"
        max="100"
        id="Driver_Age"
+       data-i18n="driverAge"
        placeholder="Driver Age"
        class="p-3 rounded bg-slate-700">
 
@@ -43,18 +87,21 @@
        min="0"
        max="80"
        id="Driving_Exp"
+       data-i18n="drivingExperience"
        placeholder="Driving Experience"
        class="p-3 rounded bg-slate-700">
 
 <input type="number"
        min="0"
        id="Prev_Accidents"
+       data-i18n="previousAccidents"
        placeholder="Previous Accidents"
        class="p-3 rounded bg-slate-700">
 
 <input type="number"
        min="0"
        id="Prev_Citations"
+       data-i18n="trafficViolations"
        placeholder="Traffic Violations Count"
        class="p-3 rounded bg-slate-700">
 
@@ -66,7 +113,7 @@
 
     <div class="bg-slate-800 rounded-xl p-6">
 
-    <h2 class="text-2xl font-bold text-green-400 mb-4">
+    <h2 class="text-2xl font-bold text-green-400 mb-4" data-i18n="vehicleInformation">
         Vehicle Information
     </h2>
 
@@ -74,23 +121,25 @@
 
         <select
             id="Veh_Usage"
+            data-i18n="vehicleUsage"
             class="p-3 rounded bg-slate-700">
 
-            <option value="">Vehicle Usage</option>
-            <option value="1">Personal</option>
-            <option value="2">Business</option>
-            <option value="3">Commercial</option>
+            <option value="" data-i18n="vehicleUsage">Vehicle Usage</option>
+            <option value="1" data-i18n="personalUsage">Personal</option>
+            <option value="2" data-i18n="businessUsage">Business</option>
+            <option value="3" data-i18n="commercialUsage">Commercial</option>
 
         </select>
 
         <select
             id="Coverage"
+            data-i18n="coverageLevel"
             class="p-3 rounded bg-slate-700">
 
-            <option value="">Coverage Level</option>
-            <option value="1">Basic</option>
-            <option value="2">Standard</option>
-            <option value="3">Premium</option>
+            <option value="" data-i18n="coverageLevel">Coverage Level</option>
+            <option value="1" data-i18n="basicCoverage">Basic</option>
+            <option value="2" data-i18n="standardCoverage">Standard</option>
+            <option value="3" data-i18n="premiumCoverage">Premium</option>
 
         </select>
 
@@ -98,18 +147,20 @@
             type="number"
             min="0"
             id="Annual_Miles_Range"
+            data-i18n="annualMiles"
             placeholder="Annual Miles"
             class="p-3 rounded bg-slate-700">
 
         <select
             id="Vehicle_Cost_Range"
+            data-i18n="vehicleCostRange"
             class="p-3 rounded bg-slate-700">
 
-            <option value="">Vehicle Cost Range</option>
-            <option value="1">Below ₹5 Lakh</option>
-            <option value="2">₹5 - ₹10 Lakh</option>
-            <option value="3">₹10 - ₹20 Lakh</option>
-            <option value="4">Above ₹20 Lakh</option>
+            <option value="" data-i18n="vehicleCostRange">Vehicle Cost Range</option>
+            <option value="1" data-i18n="below5Lakh">Below ₹5 Lakh</option>
+            <option value="2" data-i18n="range5to10Lakh">₹5 - ₹10 Lakh</option>
+            <option value="3" data-i18n="range10to20Lakh">₹10 - ₹20 Lakh</option>
+            <option value="4" data-i18n="above20Lakh">Above ₹20 Lakh</option>
 
         </select>
 
@@ -121,7 +172,7 @@
 
     <div class="bg-slate-800 rounded-xl p-6">
 
-    <h2 class="text-2xl font-bold text-yellow-400 mb-4">
+    <h2 class="text-2xl font-bold text-yellow-400 mb-4" data-i18n="financialInformation">
         Financial Information
     </h2>
 
@@ -129,13 +180,14 @@
 
         <select
             id="Sal_Range"
+            data-i18n="salaryRange"
             class="p-3 rounded bg-slate-700">
 
-            <option value="">Salary Range</option>
-            <option value="1">Below ₹3 Lakh</option>
-            <option value="2">₹3 - ₹6 Lakh</option>
-            <option value="3">₹6 - ₹12 Lakh</option>
-            <option value="4">Above ₹12 Lakh</option>
+            <option value="" data-i18n="salaryRange">Salary Range</option>
+            <option value="1" data-i18n="below3Lakh">Below ₹3 Lakh</option>
+            <option value="2" data-i18n="range3to6Lakh">₹3 - ₹6 Lakh</option>
+            <option value="3" data-i18n="range6to12Lakh">₹6 - ₹12 Lakh</option>
+            <option value="4" data-i18n="above12Lakh">Above ₹12 Lakh</option>
 
         </select>
 
@@ -143,6 +195,7 @@
             type="number"
             min="0"
             id="Quoted_Premium"
+            data-i18n="currentPremium"
             placeholder="Current Insurance Premium (₹/year)"
             class="p-3 rounded bg-slate-700">
 
@@ -155,17 +208,18 @@
 
     <div class="bg-slate-800 rounded-xl p-6">
 
-        <h2 class="text-2xl font-bold text-purple-400 mb-4">
+        <h2 class="text-2xl font-bold text-purple-400 mb-4" data-i18n="quoteAnalysis">
             Quote Analysis
         </h2>
 
-        <p class="text-gray-400 mb-4">
+        <p class="text-gray-400 mb-4" data-i18n="analysisDescription">
             Click the button below to run the autonomous agent pipeline.
         </p>
 
         <button
             onclick="processQuote()"
-            class="w-full bg-blue-500 hover:bg-blue-600 p-4 rounded-lg font-bold text-lg">
+            class="w-full bg-blue-500 hover:bg-blue-600 p-4 rounded-lg font-bold text-lg"
+            data-i18n="analyzeQuote">
 
             Analyze Quote
 
@@ -179,24 +233,24 @@
 
     <div class="bg-slate-800 rounded-xl p-6 mb-6">
 
-        <h2 class="text-2xl font-bold mb-4">
+        <h2 class="text-2xl font-bold mb-4" data-i18n="agentPipeline">
             Agent Pipeline
         </h2>
 
         <div id="agent1" class="bg-slate-700 p-3 rounded mb-2">
-            Risk Profiler : Waiting
+            <span data-i18n="riskProfilerLabel">Risk Profiler</span> : <span data-i18n="waitingStatus">Waiting</span>
         </div>
 
         <div id="agent2" class="bg-slate-700 p-3 rounded mb-2">
-            Conversion Predictor : Waiting
+            <span data-i18n="conversionPredictorLabel">Conversion Predictor</span> : <span data-i18n="waitingStatus">Waiting</span>
         </div>
 
         <div id="agent3" class="bg-slate-700 p-3 rounded mb-2">
-            Premium Advisor : Waiting
+            <span data-i18n="premiumAdvisorLabel">Premium Advisor</span> : <span data-i18n="waitingStatus">Waiting</span>
         </div>
 
         <div id="agent4" class="bg-slate-700 p-3 rounded">
-            Decision Router : Waiting
+            <span data-i18n="decisionRouterLabel">Decision Router</span> : <span data-i18n="waitingStatus">Waiting</span>
         </div>
 
     </div>
@@ -210,13 +264,13 @@
         class="animate-spin rounded-full h-16 w-16 border-b-4 border-blue-500 mx-auto mb-4">
     </div>
 
-    <h2 class="text-xl font-bold text-blue-400">
-        AI Agents Processing Quote...
-    </h2>
+    <h2 class="text-xl font-bold text-blue-400" data-i18n="processingQuote">
+    AI Agents Processing Quote...
+</h2>
 
-    <p class="text-gray-400 mt-2">
-        Risk Analysis • Conversion Prediction • Premium Optimization
-    </p>
+<p class="text-gray-400 mt-2" data-i18n="processingSteps">
+    Risk Analysis • Conversion Prediction • Premium Optimization
+</p>
 
 </div>
 
@@ -225,24 +279,32 @@
     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
 
         <div class="bg-slate-800 p-5 rounded-xl">
-            <h3 class="text-gray-400">Risk Level</h3>
-            <p id="risk" class="text-2xl font-bold mt-2">-</p>
-        </div>
+    <h3 class="text-gray-400" data-i18n="riskLevel">
+        Risk Level
+    </h3>
+    <p id="risk" class="text-2xl font-bold mt-2">-</p>
+</div>
 
-        <div class="bg-slate-800 p-5 rounded-xl">
-            <h3 class="text-gray-400">Conversion Probability</h3>
-            <p id="probability" class="text-2xl font-bold mt-2">-</p>
-        </div>
+<div class="bg-slate-800 p-5 rounded-xl">
+    <h3 class="text-gray-400" data-i18n="conversionProbability">
+        Conversion Probability
+    </h3>
+    <p id="probability" class="text-2xl font-bold mt-2">-</p>
+</div>
 
-        <div class="bg-slate-800 p-5 rounded-xl">
-            <h3 class="text-gray-400">Recommended Premium</h3>
-            <p id="premium" class="text-2xl font-bold mt-2">-</p>
-        </div>
+<div class="bg-slate-800 p-5 rounded-xl">
+    <h3 class="text-gray-400" data-i18n="recommendedPremium">
+        Recommended Premium
+    </h3>
+    <p id="premium" class="text-2xl font-bold mt-2">-</p>
+</div>
 
-        <div class="bg-slate-800 p-5 rounded-xl">
-            <h3 class="text-gray-400">Decision</h3>
-            <p id="decision" class="text-2xl font-bold mt-2">-</p>
-        </div>
+<div class="bg-slate-800 p-5 rounded-xl">
+    <h3 class="text-gray-400" data-i18n="decision">
+        Decision
+    </h3>
+    <p id="decision" class="text-2xl font-bold mt-2">-</p>
+</div>
 
     </div>
 
@@ -250,18 +312,18 @@
 
     <div class="bg-slate-800 rounded-xl p-6 mt-6">
 
-        <h2 class="text-2xl font-bold mb-4">
-            Quote History
-        </h2>
+        <h2 class="text-2xl font-bold mb-4" data-i18n="quoteHistory">
+    Quote History
+</h2>
 
         <table class="w-full text-left">
 
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Risk</th>
-                    <th>Probability</th>
-                    <th>Decision</th>
+                    <th data-i18n="idColumn">ID</th>
+<th data-i18n="riskColumn">Risk</th>
+<th data-i18n="probabilityColumn">Probability</th>
+<th data-i18n="decisionColumn">Decision</th>
                 </tr>
             </thead>
 
@@ -275,6 +337,8 @@
 
 </div>
 
+<script src="translations.js"></script>
+<script src="i18n.js"></script>
 <script src="script.js"></script>
 
 </body>

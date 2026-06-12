@@ -8,3 +8,4 @@ sqlalchemy
 joblib
 loguru
 python-multipart
+ollama
