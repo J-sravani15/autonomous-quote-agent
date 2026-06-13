@@ -19,11 +19,22 @@ def predict(data: QuoteInput):
     # Agent 2: Conversion Predictor (ML)
     prediction, probability = predict_conversion(data.dict())
 
+    # TRUE AGENT CHAINING
+    # Agent 2 now depends on Agent 1 output
+    if risk_level == "HIGH":
+        probability *= 0.85
+    elif risk_level == "MEDIUM":
+        probability *= 0.95
+
+    probability = round(probability, 4)
+
     # Agent 3: Premium Advisor
+    # Depends on Agent 1 + Agent 2
     recommended_premium = adjust_premium(data.Quoted_Premium, probability, risk_level)
 
     # Agent 4: Decision Router
-    decision = route_decision(probability, risk_level)
+    # Depends on Agent 1 + Agent 2 + Agent 3
+    decision = route_decision(probability, risk_level, recommended_premium)
 
     return {
         "risk_level": risk_level,
