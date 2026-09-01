@@ -152,7 +152,7 @@
             class="p-3 rounded bg-slate-700">
 
         <select
-            id="Vehicle_Cost_Range"
+            id="Vehicl_Cost_Range"
             data-i18n="vehicleCostRange"
             class="p-3 rounded bg-slate-700">
 
@@ -274,38 +274,128 @@
 
 </div>
 
-    <!-- RESULT CARDS -->
+    <!-- TABS -->
+    <div class="flex gap-2 mb-6 flex-wrap">
+        <button
+            onclick="switchTab('results')"
+            id="tab-results"
+            class="bg-blue-600 hover:bg-blue-700 px-6 py-2 rounded-lg font-bold tab-btn">
+            <span data-i18n="resultsTab">Results</span>
+        </button>
+        <button
+            onclick="switchTab('analysis')"
+            id="tab-analysis"
+            class="bg-slate-700 hover:bg-slate-600 px-6 py-2 rounded-lg font-bold tab-btn">
+            <span data-i18n="analysisTab">Decision Analysis</span>
+        </button>
+        <button
+            onclick="switchTab('explanation')"
+            id="tab-explanation"
+            class="bg-slate-700 hover:bg-slate-600 px-6 py-2 rounded-lg font-bold tab-btn">
+            <span data-i18n="explanationTab">AI Explanation</span>
+        </button>
+    </div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- RESULTS TAB -->
+    <div id="results-tab" class="tab-content">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-slate-800 p-5 rounded-xl">
+                <h3 class="text-gray-400" data-i18n="riskLevel">
+                    Risk Level
+                </h3>
+                <p id="risk" class="text-2xl font-bold mt-2">-</p>
+            </div>
 
-        <div class="bg-slate-800 p-5 rounded-xl">
-    <h3 class="text-gray-400" data-i18n="riskLevel">
-        Risk Level
-    </h3>
-    <p id="risk" class="text-2xl font-bold mt-2">-</p>
-</div>
+            <div class="bg-slate-800 p-5 rounded-xl">
+                <h3 class="text-gray-400" data-i18n="conversionProbability">
+                    Conversion Probability
+                </h3>
+                <p id="probability" class="text-2xl font-bold mt-2">-</p>
+            </div>
 
-<div class="bg-slate-800 p-5 rounded-xl">
-    <h3 class="text-gray-400" data-i18n="conversionProbability">
-        Conversion Probability
-    </h3>
-    <p id="probability" class="text-2xl font-bold mt-2">-</p>
-</div>
+            <div class="bg-slate-800 p-5 rounded-xl">
+                <h3 class="text-gray-400" data-i18n="recommendedPremium">
+                    Recommended Premium
+                </h3>
+                <p id="premium" class="text-2xl font-bold mt-2">-</p>
+            </div>
 
-<div class="bg-slate-800 p-5 rounded-xl">
-    <h3 class="text-gray-400" data-i18n="recommendedPremium">
-        Recommended Premium
-    </h3>
-    <p id="premium" class="text-2xl font-bold mt-2">-</p>
-</div>
+            <div class="bg-slate-800 p-5 rounded-xl">
+                <h3 class="text-gray-400" data-i18n="decision">
+                    Decision
+                </h3>
+                <p id="decision" class="text-2xl font-bold mt-2">-</p>
+            </div>
+        </div>
+    </div>
 
-<div class="bg-slate-800 p-5 rounded-xl">
-    <h3 class="text-gray-400" data-i18n="decision">
-        Decision
-    </h3>
-    <p id="decision" class="text-2xl font-bold mt-2">-</p>
-</div>
+    <!-- DECISION ANALYSIS TAB (NEW v2.0) -->
+    <div id="analysis-tab" class="tab-content hidden">
+        <div class="bg-slate-800 rounded-xl p-6 space-y-6">
+            <!-- Confidence Score -->
+            <div class="bg-slate-700 p-5 rounded-lg">
+                <h3 class="text-lg font-bold text-blue-400 mb-3" data-i18n="confidenceScore">Confidence Score</h3>
+                <div class="flex items-center gap-4">
+                    <div class="flex-1">
+                        <div class="w-full bg-slate-600 rounded-full h-4 overflow-hidden">
+                            <div id="confidenceBar" class="bg-green-500 h-full w-0 transition-all duration-300"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <p id="confidenceScore" class="text-3xl font-bold text-green-400">-</p>
+                        <p id="confidenceLevel" class="text-sm text-gray-400">-</p>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Risk Factors -->
+            <div class="bg-slate-700 p-5 rounded-lg">
+                <h3 class="text-lg font-bold text-yellow-400 mb-3" data-i18n="riskFactors">Risk Factors</h3>
+                <div id="riskFactors" class="space-y-2 text-gray-300">
+                    <p class="text-gray-400">-</p>
+                </div>
+            </div>
+
+            <!-- Reasoning -->
+            <div class="bg-slate-700 p-5 rounded-lg">
+                <h3 class="text-lg font-bold text-cyan-400 mb-3" data-i18n="decisionReasoning">Decision Reasoning</h3>
+                <p id="reasoning" class="text-gray-300 leading-relaxed text-sm">-</p>
+            </div>
+
+            <!-- Premium Adjustment -->
+            <div class="bg-slate-700 p-5 rounded-lg">
+                <h3 class="text-lg font-bold text-purple-400 mb-3" data-i18n="premiumAdjustment">Premium Adjustment</h3>
+                <p id="premiumAdjustment" class="text-gray-300 text-sm">-</p>
+            </div>
+
+            <!-- Recommended Action -->
+            <div class="bg-slate-700 p-5 rounded-lg border-l-4 border-green-500">
+                <h3 class="text-lg font-bold text-green-400 mb-3" data-i18n="recommendedAction">Recommended Action</h3>
+                <p id="recommendedAction" class="text-gray-300 text-sm">-</p>
+            </div>
+
+            <!-- Override Alert (if triggered) -->
+            <div id="overrideAlert" class="hidden bg-red-900 border-l-4 border-red-500 p-5 rounded-lg">
+                <h3 class="text-lg font-bold text-red-400 mb-2" data-i18n="alertOverride">⚠️ Override Alert</h3>
+                <p id="overrideReason" class="text-gray-300 text-sm">-</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXPLANATION TAB -->
+    <div id="explanation-tab" class="tab-content hidden">
+        <div class="bg-slate-800 rounded-xl p-6">
+            <div id="explanationContent" class="text-gray-300 leading-relaxed space-y-4">
+                <p class="text-gray-400">-</p>
+            </div>
+            <button
+                onclick="generateExplanation()"
+                id="explainBtn"
+                class="mt-6 bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-bold w-full"
+                data-i18n="generateExplanation">
+                Generate AI Explanation
+            </button>
+        </div>
     </div>
 
     <!-- QUOTE HISTORY -->
