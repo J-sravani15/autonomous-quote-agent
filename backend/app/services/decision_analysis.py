@@ -13,7 +13,7 @@ Design principles:
 - Track confidence levels explicitly
 """
 
-from schemas.decision_schema import (
+from app.schemas.decision_schema import (
     DecisionAnalysis,
     DecisionEnum,
     RiskLevelEnum,
@@ -29,21 +29,21 @@ def _calculate_confidence_score(
 ) -> float:
     """
     Calculate confidence score for the decision.
-    
+
     Confidence factors:
     - ML probability: 40% weight (how sure the model is)
     - Risk alignment: 40% weight (how well decision aligns with risk)
     - Decision consistency: 20% weight (internal coherence)
-    
+
     Args:
         probability: Conversion probability from ML model
         risk_level: Risk level classification
         decision_aligned: Whether decision aligns with risk/probability
-        
+
     Returns:
         Confidence score between 0.0 and 1.0
     """
-    
+
     # ML probability confidence (normalized)
     if probability > 0.8 or probability < 0.2:
         prob_confidence = 0.9  # High certainty at extremes
@@ -51,7 +51,7 @@ def _calculate_confidence_score(
         prob_confidence = 0.7  # Medium certainty in outer ranges
     else:
         prob_confidence = 0.5  # Lower certainty near 0.5 (indecisive)
-    
+
     # Risk-probability alignment confidence
     if risk_level == RiskLevelEnum.LOW and probability > 0.6:
         alignment_confidence = 0.95  # Very well aligned
@@ -61,17 +61,17 @@ def _calculate_confidence_score(
         alignment_confidence = 0.85  # Well aligned
     else:
         alignment_confidence = 0.65  # Misalignment reduces confidence
-    
+
     # Decision consistency
     consistency_confidence = 0.9 if decision_aligned else 0.6
-    
+
     # Weighted average
     final_score = (
         (prob_confidence * 0.4)
         + (alignment_confidence * 0.4)
         + (consistency_confidence * 0.2)
     )
-    
+
     return round(final_score, 3)
 
 
@@ -97,30 +97,30 @@ def _identify_risk_factors(
 ) -> List[str]:
     """
     Identify and list specific risk factors from quote data.
-    
+
     Args:
         prev_accidents: Number of previous accidents
         prev_citations: Number of previous citations
         annual_miles: Annual miles range
         vehicle_cost: Vehicle cost range
-        
+
     Returns:
         List of identified risk factors as strings
     """
     factors: List[str] = []
-    
+
     if prev_accidents > 0:
         factors.append(f"Previous accidents: {prev_accidents}")
-    
+
     if prev_citations > 0:
         factors.append(f"Previous citations: {prev_citations}")
-    
+
     if annual_miles > 15000:  # Assuming range, adjust threshold as needed
         factors.append("High annual mileage exposure")
-    
+
     if vehicle_cost > 30000:  # High-value vehicle
         factors.append("High-value vehicle")
-    
+
     return factors
 
 
@@ -131,10 +131,13 @@ def _generate_reasoning(
     risk_factors: List[str],
     quoted_premium: float,
     recommended_premium: float,
+    driver_age: int,
+    driving_exp: int,
+    annual_miles: int,
 ) -> str:
     """
     Generate business-friendly reasoning for the decision.
-    
+
     Args:
         risk_level: Risk classification
         probability: Conversion probability
@@ -142,60 +145,64 @@ def _generate_reasoning(
         risk_factors: Identified risk factors
         quoted_premium: Premium quoted
         recommended_premium: Premium recommended
-        
+
     Returns:
         Formatted reasoning string
     """
-    
+
     # Start with risk assessment
-    reasoning_parts = [
-        f"Risk Assessment: Customer classified as {risk_level.value} risk."
-    ]
-    
-    if risk_factors:
+    reasoning_parts = []
+
+    reasoning_parts.append(
+        f"Driver age is {driver_age} with {driving_exp} years of driving experience."
+    )
+
+    if risk_level == RiskLevelEnum.LOW:
         reasoning_parts.append(
-            f"Key factors: {', '.join(risk_factors)}."
+            "Customer falls into a low-risk category due to safe driving history and strong experience."
         )
-    
-    # Add conversion insight
-    prob_insight = ""
-    if probability > 0.7:
-        prob_insight = "ML model indicates high conversion likelihood"
-    elif probability > 0.4:
-        prob_insight = "ML model shows moderate conversion potential"
+
+    elif risk_level == RiskLevelEnum.MEDIUM:
+        reasoning_parts.append(
+            "Customer falls into a medium-risk category because some risk indicators were detected."
+        )
+
     else:
-        prob_insight = "ML model predicts low conversion likelihood"
-    
-    reasoning_parts.append(f"Conversion Analysis: {prob_insight}.")
-    
-    # Premium adjustment
-    if abs(recommended_premium - quoted_premium) > 0.01:
-        percent_change = round(
-            ((recommended_premium - quoted_premium) / quoted_premium) * 100, 1
-        )
-        if percent_change > 0:
-            reasoning_parts.append(
-                f"Premium adjusted +{percent_change}% due to risk profile."
-            )
-        else:
-            reasoning_parts.append(
-                f"Premium adjusted {percent_change}% to improve competitiveness."
-            )
-    
-    # Final decision justification
-    if decision == DecisionEnum.AUTO_APPROVE:
         reasoning_parts.append(
-            "Decision: Auto-approve due to low risk and high conversion probability."
+            "Customer falls into a high-risk category because of elevated risk indicators."
         )
-    elif decision == DecisionEnum.AGENT_FOLLOW_UP:
+
+    if annual_miles > 15000:
         reasoning_parts.append(
-            "Decision: Agent follow-up recommended for review and personalization."
+            "Annual mileage is high, increasing exposure to road risk."
         )
-    else:  # ESCALATE
+    else:
+        reasoning_parts.append("Annual mileage is within a normal range.")
+
+    if risk_factors:
+        reasoning_parts.append(f"Identified risk factors: {', '.join(risk_factors)}.")
+
+    reasoning_parts.append(
+        f"Predicted conversion probability is {round(probability * 100, 1)}%."
+    )
+
+    if recommended_premium > quoted_premium:
         reasoning_parts.append(
-            "Decision: Escalate to underwriter for specialized review."
+            "Premium was increased to reflect the customer's risk profile."
         )
-    
+
+    elif recommended_premium < quoted_premium:
+        reasoning_parts.append(
+            "Premium was reduced to improve competitiveness and conversion."
+        )
+
+    else:
+        reasoning_parts.append(
+            "Premium remained unchanged because the quote is already aligned with risk."
+        )
+
+    reasoning_parts.append(f"Final decision: {decision.value}.")
+
     return " ".join(reasoning_parts)
 
 
@@ -207,17 +214,17 @@ def _generate_recommended_action(
 ) -> str:
     """
     Generate specific, actionable next steps.
-    
+
     Args:
         decision: Final decision
         risk_level: Risk level
         probability: Conversion probability
         confidence_score: Confidence in the decision
-        
+
     Returns:
         Formatted action string
     """
-    
+
     actions = {
         DecisionEnum.AUTO_APPROVE: (
             "Issue quote immediately. Monitor for policy activation within 24 hours."
@@ -230,18 +237,13 @@ def _generate_recommended_action(
             f"Route to underwriting queue for review. Flag as {'high-risk case' if risk_level == RiskLevelEnum.HIGH else 'complex case'} requiring specialist assessment."
         ),
     }
-    
-    base_action = actions.get(
-        decision,
-        "Review quote status and determine next steps."
-    )
-    
+
+    base_action = actions.get(decision, "Review quote status and determine next steps.")
+
     # Add confidence caveat if low
     if confidence_score < 0.6:
-        base_action += (
-            " ⚠️ Low confidence in this decision - manual review recommended."
-        )
-    
+        base_action += " ⚠️ Low confidence in this decision - manual review recommended."
+
     return base_action
 
 
@@ -254,36 +256,39 @@ def _check_override_conditions(
 ) -> Tuple[bool, str]:
     """
     Check if any override rules should trigger.
-    
+
     Override rules:
     - Escalate if high-risk + multiple incidents
     - Downgrade escalation if probability is extremely high
     - Special handling for edge cases
-    
+
     Args:
         risk_level: Risk classification
         probability: Conversion probability
         decision: Current decision
         prev_accidents: Number of accidents
         prev_citations: Number of citations
-        
+
     Returns:
         Tuple of (override_triggered, reason)
     """
-    
+
     # Override 1: Multiple incidents in high-risk category should escalate
     if risk_level == RiskLevelEnum.HIGH and (prev_accidents + prev_citations) > 5:
         if decision != DecisionEnum.ESCALATE_TO_UNDERWRITER:
             return True, "Multiple incidents require mandatory underwriter review"
-    
+
     # Override 2: Extremely high probability can override escalation
     if probability > 0.95 and decision == DecisionEnum.ESCALATE_TO_UNDERWRITER:
-        return True, "Exceptionally high conversion probability warrants reconsideration"
-    
+        return (
+            True,
+            "Exceptionally high conversion probability warrants reconsideration",
+        )
+
     # Override 3: Very low probability auto-approvals should be escalated
     if probability < 0.3 and decision == DecisionEnum.AUTO_APPROVE:
         return True, "Low conversion probability contradicts auto-approval"
-    
+
     return False, ""
 
 
@@ -294,6 +299,8 @@ def analyze_decision(
     recommended_premium: float,
     decision: str,
     quoted_premium: float,
+    driver_age: int,
+    driving_exp: int,
     prev_accidents: int = 0,
     prev_citations: int = 0,
     annual_miles: int = 10000,
@@ -301,11 +308,11 @@ def analyze_decision(
 ) -> DecisionAnalysis:
     """
     Analyze a quote decision and generate comprehensive reasoning.
-    
+
     This is the main entry point for the decision analysis service.
     It takes all inputs from the prediction pipeline and produces
     a detailed analysis object suitable for business users and logs.
-    
+
     Args:
         risk_level: Risk level from risk profiler ("LOW", "MEDIUM", "HIGH")
         prediction: Binary prediction from ML model (0 or 1)
@@ -317,32 +324,32 @@ def analyze_decision(
         prev_citations: Number of previous citations
         annual_miles: Annual miles range value
         vehicle_cost: Vehicle cost range value
-        
+
     Returns:
         DecisionAnalysis object with structured decision reasoning
     """
-    
+
     # Convert string enums to typed enums
     risk_enum = RiskLevelEnum(risk_level)
     decision_enum = DecisionEnum(decision)
-    
+
     # Identify risk factors
     risk_factors = _identify_risk_factors(
         prev_accidents, prev_citations, annual_miles, vehicle_cost
     )
-    
+
     # Calculate confidence
     decision_aligned = (
         (risk_enum == RiskLevelEnum.LOW and conversion_probability > 0.6)
         or (risk_enum == RiskLevelEnum.HIGH and conversion_probability < 0.4)
         or (risk_enum == RiskLevelEnum.MEDIUM and 0.4 <= conversion_probability <= 0.7)
     )
-    
+
     confidence_score = _calculate_confidence_score(
         conversion_probability, risk_enum, decision_aligned
     )
     confidence_level = _confidence_to_level(confidence_score)
-    
+
     # Generate reasoning
     reasoning = _generate_reasoning(
         risk_enum,
@@ -351,13 +358,16 @@ def analyze_decision(
         risk_factors,
         quoted_premium,
         recommended_premium,
+        driver_age,
+        driving_exp,
+        annual_miles,
     )
-    
+
     # Generate recommended action
     recommended_action = _generate_recommended_action(
         decision_enum, risk_enum, conversion_probability, confidence_score
     )
-    
+
     # Premium adjustment reason
     percent_change = round(
         ((recommended_premium - quoted_premium) / quoted_premium) * 100, 1
@@ -365,10 +375,14 @@ def analyze_decision(
     if abs(percent_change) < 0.5:
         premium_adjustment_reason = "Premium held stable based on risk profile"
     elif percent_change > 0:
-        premium_adjustment_reason = f"Premium increased {abs(percent_change)}% due to risk factors"
+        premium_adjustment_reason = (
+            f"Premium increased {abs(percent_change)}% due to risk factors"
+        )
     else:
-        premium_adjustment_reason = f"Premium reduced {abs(percent_change)}% to enhance competitiveness"
-    
+        premium_adjustment_reason = (
+            f"Premium reduced {abs(percent_change)}% to enhance competitiveness"
+        )
+
     # Check override conditions
     override_triggered, override_reason = _check_override_conditions(
         risk_enum,
@@ -377,13 +391,13 @@ def analyze_decision(
         prev_accidents,
         prev_citations,
     )
-    
+
     alternative_decision = None
     if override_triggered and override_reason:
         # Suggest alternative if override needed
         if decision_enum != DecisionEnum.ESCALATE_TO_UNDERWRITER:
             alternative_decision = DecisionEnum.ESCALATE_TO_UNDERWRITER
-    
+
     # Build final analysis
     analysis = DecisionAnalysis(
         decision=decision_enum,
@@ -399,5 +413,5 @@ def analyze_decision(
         override_triggered=override_triggered,
         override_reason=override_reason if override_triggered else None,
     )
-    
+
     return analysis

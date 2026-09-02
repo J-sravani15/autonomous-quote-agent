@@ -195,7 +195,7 @@ uvicorn main:app --reload
 
 ### Issue: Ollama errors (for /explain endpoint)
 **Solution**: Install Ollama and run: `ollama serve`
-Or set model name: `OLLAMA_MODEL=llama3`
+Or set model name: `OLLAMA_MODEL=llama3.2`
 
 ### Issue: Port 8000 already in use
 **Solution**: Use different port:
@@ -251,7 +251,7 @@ DEBUG=true
 # Production
 ENVIRONMENT=production
 DEBUG=false
-OLLAMA_MODEL=llama3.1
+OLLAMA_MODEL=llama3.2
 DATABASE_URL=postgresql://user:pass@localhost/quotes
 ```
 

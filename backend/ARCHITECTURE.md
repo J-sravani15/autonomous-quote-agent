@@ -408,7 +408,7 @@ backend/
 ### Environment Variables
 ```bash
 # Ollama configuration
-OLLAMA_MODEL=llama3.1
+OLLAMA_MODEL=llama3.2
 
 # Database
 DATABASE_URL=sqlite:///./hackathon.db

@@ -13,7 +13,7 @@ insurance quotes to predict conversion probability and recommend actions.
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import predict
+from app.routers import predict
 from loguru import logger
 import sys
 

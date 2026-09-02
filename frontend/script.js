@@ -1,7 +1,4 @@
-const API_BASE_URL =
-  window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
-    ? "http://127.0.0.1:8000"
-    : "https://autonomous-quote-agent.onrender.com";
+const API_BASE_URL = "http://127.0.0.1:8000";
 
 let quoteCounter = 1;
 let lastResult = null; // Store last result for explanation
@@ -137,9 +134,9 @@ const t = translations[currentLang];
   // Basic Validation
 
   if (
-    requestData.Driver_Age === 0 ||
-    requestData.Driving_Exp === 0 ||
-    requestData.Quoted_Premium === 0
+    requestData.Driver_Age === "" ||
+    requestData.Driving_Exp === "" ||
+    requestData.Quoted_Premium === ""
   ) {
     alert(t.fillRequiredFields);
     return;
