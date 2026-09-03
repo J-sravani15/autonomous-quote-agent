@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://127.0.0.1:8000";
+https://autonomous-quote-agent.onrender.com
 
 let quoteCounter = 1;
 let lastResult = null; // Store last result for explanation
