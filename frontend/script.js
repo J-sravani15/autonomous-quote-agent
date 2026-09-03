@@ -1,4 +1,4 @@
-https://autonomous-quote-agent.onrender.com
+const API_BASE_URL = "https://autonomous-quote-agent.onrender.com";
 
 let quoteCounter = 1;
 let lastResult = null; // Store last result for explanation
